@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="estilos.css">
+    <title>Document</title>
+    <style>
+    label{display: inline-block; width:100px}
+    input,select{width: 120px;}
+    </style>
+</head>
+<body>
+
+    <h1>COMUNICACION DE MEDIDOR DE MT. "CFE"</h1>
+
+    <label>Valor</label><input id="Valbox" type="text"><br><br>
+    <label>Registro</label><input id="Regbox" type="text"><br><br>
+    
+
+ 
+    <button id="Insbtn">INSERT</button>
+    <button id="Selbtn">SELECT</button>
+    <button id="Updbtn">UPDATE</button>
+    <button id="Delbtn">DELETE</button>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyCAjwuE-xysAVD6GiRVqX77cFj584pJEJ0",
+          authDomain: "cfegprs.firebaseapp.com",
+          databaseURL: "https://cfegprs-default-rtdb.firebaseio.com",
+          projectId: "cfegprs",
+          storageBucket: "cfegprs.appspot.com",
+          messagingSenderId: "15309355965",
+          appId: "1:15309355965:web:b7643a8ff246a3d7c3f0d4",
+          measurementId: "G-H7H99QHK3M"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import {getDatabase, ref, get, set, child, update, remove}
+        from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js";
+
+        const db = getDatabase();
+
+
+        var valbox = document.getElementById("Valbox");
+        var regbox = document.getElementById("Regbox");
+        
+
+        var insBtn = document.getElementById("Insbtn");
+        var selBtn = document.getElementById("Selbtn");
+        var updBtn = document.getElementById("Updbtn");
+        var delBtn = document.getElementById("Delbtn");
+
+        function InsertData(){
+            set(ref(db, "/"),{
+                Val: valbox.value,
+                Registro: regbox.value
+            })
+            .then(()=>{
+                alert("mando dato");
+            })
+            .catch((error)=>{
+                alert("no se pudo, error"+error);
+            });
+        }
+
+        function SelecData(){
+            const dbref = ref(db);
+
+            get(child(dbref,"/")).then((snapshot)=>{
+                if(snapshot.exists()){
+                    
+                    regbox.value = snapshot.val().Registro;
+                }
+
+                else{
+                    alert("no hay nada");
+                }
+            })
+            .catch((error)=>{
+                alert("algo salio mal, error"+error);
+            });
+        }
+
+        function UpdatetData(){
+            update(ref(db, "/"),{
+                
+                Val: valbox.value
+            })
+            .then(()=>{
+                alert("cambio de datos");
+            })
+            .catch((error)=>{
+                alert("no se pudo, error"+error);
+            });
+        }
+
+        function DeletetData(){
+            remove(ref(db, "/"))
+            .then(()=>{
+                alert("eliminado");
+            })
+            .catch((error)=>{
+                alert("no se pudo, error"+error);
+            });
+        }
+
+        
+
+        
+        
+
+        insBtn.addEventListener('click', InsertData);
+        delBtn.addEventListener('click', DeletetData);
+        selBtn.addEventListener('click', SelecData);
+        updBtn.addEventListener('click', UpdatetData);
+        
+        
+
+
+      </script>
+
+
+</body>
+</html>
